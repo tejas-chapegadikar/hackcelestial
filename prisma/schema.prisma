@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum BusinessType {
+  HOTEL
+  RESTAURANT
+  CATERER
+  BANQUET_VENUE
+  RESORT
+  EVENT_ORGANIZER
+  OTHER
+}
+
+enum ResourceType {
+  BANQUET_SPACE
+  PARKING
+  VEHICLE
+  KITCHEN
+  FURNITURE
+  AV_EQUIPMENT
+  OTHER
+}
+
+enum RentalUnit {
+  HOUR
+  DAY
+}
+
+enum ResourceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RequestStatus {
+  PENDING
+  COUNTERED
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum NegotiationType {
+  MESSAGE
+  QUOTE
+  COUNTER
+  ACCEPT
+  REJECT
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model Business {
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  businessType BusinessType
+  phone        String?
+  address      String?
+  city         String
+  lat          Float?
+  lng          Float?
+  createdAt    DateTime     @default(now())
+
+  resources          Resource[]
+  bundles            Bundle[]
+  requestsMade       Request[]            @relation("SeekerRequests")
+  negotiationSent    NegotiationMessage[]
+  reviewsGiven       Review[]             @relation("ReviewsFrom")
+  reviewsReceived    Review[]             @relation("ReviewsTo")
+  notifications      Notification[]
+}
+
+model Resource {
+  id               String         @id @default(cuid())
+  providerId       String
+  provider         Business       @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  type             ResourceType
+  title            String
+  description      String?
+  quantity         Int            @default(1)
+  capacity         Int?
+  unit             RentalUnit     @default(DAY)
+  pricePerUnit     Float
+  minRentalPeriod  Int            @default(1)
+  amenities        String[]       @default([])
+  city             String
+  lat              Float?
+  lng              Float?
+  status           ResourceStatus @default(ACTIVE)
+  createdAt        DateTime       @default(now())
+
+  unavailableRanges UnavailableRange[]
+  requests          Request[]
+
+  @@index([type, city])
+}
+
+model UnavailableRange {
+  id         String   @id @default(cuid())
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  endDate    DateTime
+  reason     String?
+}
+
+model Bundle {
+  id        String   @id @default(cuid())
+  seekerId  String
+  seeker    Business @relation(fields: [seekerId], references: [id], onDelete: Cascade)
+  title     String
+  eventDate DateTime
+  city      String
+  createdAt DateTime @default(now())
+
+  items    BundleItem[]
+  requests Request[]
+}
+
+/** An abstract resource need within a bundle, matched against providers before any Request is sent. */
+model BundleItem {
+  id             String       @id @default(cuid())
+  bundleId       String
+  bundle         Bundle       @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  type           ResourceType
+  quantityNeeded Int          @default(1)
+  capacityNeeded Int?
+  budget         Float?
+  amenities      String[]     @default([])
+}
+
+model Request {
+  id              String        @id @default(cuid())
+  seekerId        String
+  seeker          Business      @relation("SeekerRequests", fields: [seekerId], references: [id], onDelete: Cascade)
+  resourceId      String
+  resource        Resource      @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  bundleId        String?
+  bundle          Bundle?       @relation(fields: [bundleId], references: [id], onDelete: SetNull)
+  startDate       DateTime
+  endDate         DateTime
+  quantityNeeded  Int           @default(1)
+  capacityNeeded  Int?
+  budget          Float?
+  urgent          Boolean       @default(false)
+  status          RequestStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+
+  negotiation NegotiationMessage[]
+  reviews     Review[]
+
+  @@index([resourceId, status])
+  @@index([seekerId, status])
+}
+
+model NegotiationMessage {
+  id        String          @id @default(cuid())
+  requestId String
+  request   Request         @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  senderId  String
+  sender    Business        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  type      NegotiationType
+  price     Float?
+  message   String?
+  createdAt DateTime        @default(now())
+
+  @@index([requestId])
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  requestId   String
+  request     Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  fromId      String
+  from        Business @relation("ReviewsFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  toId        String
+  to          Business @relation("ReviewsTo", fields: [toId], references: [id], onDelete: Cascade)
+  rating      Int
+  onTime      Boolean  @default(true)
+  conditionOk Boolean  @default(true)
+  punctual    Boolean  @default(true)
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  @@unique([requestId, fromId])
+  @@index([toId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      Business @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  message   String
+  link      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
