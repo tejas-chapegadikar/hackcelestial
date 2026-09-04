@@ -58,14 +58,14 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-teal-600 text-white rounded-md py-2 text-sm font-medium hover:bg-teal-700 disabled:opacity-50"
+          className="w-full bg-gray-900 text-white rounded-full py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
         >
           {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
       <p className="text-sm text-gray-600 mt-4">
         No account?{" "}
-        <Link href="/signup" className="text-teal-700 font-medium">
+        <Link href="/signup" className="text-gray-900 font-medium">
           Sign up
         </Link>
       </p>

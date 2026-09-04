@@ -193,7 +193,7 @@ export default function NewResourcePage() {
             className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
           />
           {benchmark && (
-            <p className="text-xs text-teal-700 mt-1.5">
+            <p className="text-xs text-gray-900 mt-1.5">
               💡 Similar resources {benchmark.scope === "city" ? "in your area" : "on the platform"} are
               priced between {formatCurrency(benchmark.min)} – {formatCurrency(benchmark.max)} (avg{" "}
               {formatCurrency(benchmark.avg)}, {benchmark.sampleSize} listing(s)).
@@ -215,7 +215,7 @@ export default function NewResourcePage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-teal-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-teal-700 disabled:opacity-50"
+          className="bg-gray-900 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
         >
           {loading ? "Publishing..." : "Publish listing"}
         </button>

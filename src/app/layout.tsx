@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
-import Navbar from "@/components/Navbar";
+import AppShell from "@/components/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,10 +26,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
+      <body className="min-h-full text-gray-900">
         <SessionProviderWrapper>
-          <Navbar />
-          <main className="flex-1 mx-auto w-full max-w-6xl px-4 py-6">{children}</main>
+          <AppShell>{children}</AppShell>
         </SessionProviderWrapper>
       </body>
     </html>

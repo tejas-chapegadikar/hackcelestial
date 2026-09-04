@@ -1,4 +1,4 @@
-import { cn, REQUEST_STATUS_LABELS } from "@/lib/utils";
+import { cn, REQUEST_STATUS_LABELS, RESOURCE_TYPE_LABELS, resourceTypeStyle } from "@/lib/utils";
 
 export function UrgentBadge() {
   return (
@@ -15,7 +15,7 @@ export function RequestStatusBadge({ status }: { status: string }) {
     ACCEPTED: "bg-green-50 text-green-700 border-green-200",
     REJECTED: "bg-red-50 text-red-700 border-red-200",
     CANCELLED: "bg-gray-100 text-gray-600 border-gray-200",
-    COMPLETED: "bg-teal-50 text-teal-700 border-teal-200",
+    COMPLETED: "bg-gray-900 text-white border-gray-900",
   };
   return (
     <span
@@ -25,6 +25,33 @@ export function RequestStatusBadge({ status }: { status: string }) {
       )}
     >
       {REQUEST_STATUS_LABELS[status] ?? status}
+    </span>
+  );
+}
+
+/** Small colored pill for a resource type — the one spot of color per type across an otherwise neutral UI. */
+export function TypeChip({ type }: { type: string }) {
+  const style = resourceTypeStyle(type);
+  return (
+    <span className={cn("inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full", style.chip)}>
+      <span>{style.icon}</span>
+      {RESOURCE_TYPE_LABELS[type] ?? type}
+    </span>
+  );
+}
+
+/** Rounded square icon tile for a resource type, used as a leading visual in cards/rows. */
+export function TypeIcon({ type, size = "md" }: { type: string; size?: "sm" | "md" }) {
+  const style = resourceTypeStyle(type);
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center justify-center rounded-lg shrink-0",
+        style.iconBg,
+        size === "sm" ? "w-8 h-8 text-sm" : "w-10 h-10 text-base"
+      )}
+    >
+      {style.icon}
     </span>
   );
 }

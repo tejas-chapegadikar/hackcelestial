@@ -84,3 +84,77 @@ export const REQUEST_STATUS_LABELS: Record<string, string> = {
   CANCELLED: "Cancelled",
   COMPLETED: "Completed",
 };
+
+export type TypeStyle = { icon: string; chip: string; iconBg: string; bar: string };
+
+/** One accent color per resource type — the only spot of color in an otherwise black/white UI. */
+export const RESOURCE_TYPE_STYLES: Record<string, TypeStyle> = {
+  BANQUET_SPACE: {
+    icon: "🏛️",
+    chip: "bg-violet-50 text-violet-700",
+    iconBg: "bg-violet-100",
+    bar: "bg-violet-500",
+  },
+  PARKING: {
+    icon: "🅿️",
+    chip: "bg-blue-50 text-blue-700",
+    iconBg: "bg-blue-100",
+    bar: "bg-blue-500",
+  },
+  VEHICLE: {
+    icon: "🚐",
+    chip: "bg-amber-50 text-amber-700",
+    iconBg: "bg-amber-100",
+    bar: "bg-amber-500",
+  },
+  KITCHEN: {
+    icon: "🍳",
+    chip: "bg-rose-50 text-rose-700",
+    iconBg: "bg-rose-100",
+    bar: "bg-rose-500",
+  },
+  FURNITURE: {
+    icon: "🪑",
+    chip: "bg-emerald-50 text-emerald-700",
+    iconBg: "bg-emerald-100",
+    bar: "bg-emerald-500",
+  },
+  AV_EQUIPMENT: {
+    icon: "🎛️",
+    chip: "bg-cyan-50 text-cyan-700",
+    iconBg: "bg-cyan-100",
+    bar: "bg-cyan-500",
+  },
+  OTHER: {
+    icon: "📦",
+    chip: "bg-gray-100 text-gray-700",
+    iconBg: "bg-gray-100",
+    bar: "bg-gray-500",
+  },
+};
+
+export function resourceTypeStyle(type: string): TypeStyle {
+  return RESOURCE_TYPE_STYLES[type] ?? RESOURCE_TYPE_STYLES.OTHER;
+}
+
+/** Deterministic initials-avatar background, keyed off the business id. */
+const AVATAR_COLORS = [
+  "bg-violet-600",
+  "bg-blue-600",
+  "bg-emerald-600",
+  "bg-amber-600",
+  "bg-rose-600",
+  "bg-cyan-600",
+  "bg-indigo-600",
+];
+
+export function avatarColor(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
+export function initials(name: string) {
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase();
+}

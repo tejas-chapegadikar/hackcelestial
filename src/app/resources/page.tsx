@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { RESOURCE_TYPE_LABELS, formatCurrency } from "@/lib/utils";
-import { CompatibilityBadge, MinRentalBadge, StarRating } from "@/components/Badges";
+import { CompatibilityBadge, MinRentalBadge, StarRating, TypeIcon } from "@/components/Badges";
 
 type SearchResult = {
   resource: {
@@ -81,7 +81,7 @@ export default function ResourcesPage() {
           e.preventDefault();
           search();
         }}
-        className="bg-white border border-gray-200 rounded-lg p-4 grid sm:grid-cols-3 lg:grid-cols-4 gap-3"
+        className="bg-white border border-gray-200 rounded-2xl p-4 grid sm:grid-cols-3 lg:grid-cols-4 gap-3"
       >
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
@@ -168,7 +168,7 @@ export default function ResourcesPage() {
         <div className="sm:col-span-3 lg:col-span-4">
           <button
             type="submit"
-            className="bg-teal-600 text-white text-sm font-medium px-4 py-2 rounded-md hover:bg-teal-700"
+            className="bg-gray-900 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-800"
           >
             Search
           </button>
@@ -186,17 +186,20 @@ export default function ResourcesPage() {
           <Link
             key={r.resource.id}
             href={`/resources/${r.resource.id}`}
-            className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 transition-colors flex flex-col gap-2"
+            className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors flex flex-col gap-2"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <div className="font-medium">{r.resource.title}</div>
-                <div className="text-xs text-gray-500">
-                  {RESOURCE_TYPE_LABELS[r.resource.type]} · {r.resource.city}
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex items-start gap-3 min-w-0">
+                <TypeIcon type={r.resource.type} />
+                <div className="min-w-0">
+                  <div className="font-medium truncate">{r.resource.title}</div>
+                  <div className="text-xs text-gray-500">
+                    {RESOURCE_TYPE_LABELS[r.resource.type]} · {r.resource.city}
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="font-semibold text-teal-700">
+              <div className="text-right shrink-0">
+                <div className="font-semibold text-gray-900">
                   {formatCurrency(r.resource.pricePerUnit)}
                 </div>
                 <div className="text-xs text-gray-500">/{r.resource.unit.toLowerCase()}</div>

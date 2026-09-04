@@ -68,7 +68,7 @@ function RequestsInner() {
           <Link
             key={r.id}
             href={`/requests/${r.id}`}
-            className="block bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 transition-colors"
+            className="block bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors"
           >
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>

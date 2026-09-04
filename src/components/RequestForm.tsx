@@ -54,7 +54,7 @@ export default function RequestForm({ resourceId }: { resourceId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 bg-white border border-gray-200 rounded-lg p-4">
+    <form onSubmit={handleSubmit} className="space-y-3 bg-white border border-gray-200 rounded-2xl p-4">
       <h3 className="font-semibold">Request this resource</h3>
       <div className="grid grid-cols-2 gap-3">
         <div>
@@ -136,7 +136,7 @@ export default function RequestForm({ resourceId }: { resourceId: string }) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-teal-600 text-white rounded-md py-2 text-sm font-medium hover:bg-teal-700 disabled:opacity-50"
+        className="w-full bg-gray-900 text-white rounded-full py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
       >
         {loading ? "Sending..." : "Send request"}
       </button>

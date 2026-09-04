@@ -62,7 +62,7 @@ export default async function PublicProfilePage({
           <ul className="space-y-1">
             {resources.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/resources/${r.id}`} className="text-teal-700 hover:underline">
+                <Link href={`/resources/${r.id}`} className="text-gray-900 hover:underline">
                   {r.title}
                 </Link>{" "}
                 <span className="text-gray-500">({RESOURCE_TYPE_LABELS[r.type]})</span>
@@ -77,7 +77,7 @@ export default async function PublicProfilePage({
           <h2 className="font-semibold text-sm mb-2">Reviews</h2>
           <ul className="space-y-2">
             {reviews.map((r) => (
-              <li key={r.id} className="bg-white border border-gray-200 rounded-lg p-3 text-sm">
+              <li key={r.id} className="bg-white border border-gray-200 rounded-2xl p-3 text-sm">
                 <div className="flex items-center gap-2">
                   <StarRating value={r.rating} />
                   <span className="text-xs text-gray-500">from {r.from.name}</span>

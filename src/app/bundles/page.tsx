@@ -20,7 +20,7 @@ export default async function BundlesPage() {
         <h1 className="text-2xl font-semibold">Event bundles</h1>
         <Link
           href="/bundles/new"
-          className="bg-teal-600 text-white text-sm font-medium px-3 py-2 rounded-md hover:bg-teal-700"
+          className="bg-gray-900 text-white text-sm font-medium px-3 py-2 rounded-full hover:bg-gray-800"
         >
           + New bundle
         </Link>
@@ -38,7 +38,7 @@ export default async function BundlesPage() {
           <Link
             key={b.id}
             href={`/bundles/${b.id}`}
-            className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 transition-colors"
+            className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors"
           >
             <div className="font-medium">{b.title}</div>
             <div className="text-xs text-gray-500 mb-2">

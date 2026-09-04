@@ -44,7 +44,7 @@ export default async function ResourceDetailPage({
           <h1 className="text-2xl font-semibold">{resource.title}</h1>
           <p className="text-sm text-gray-600 mt-1">
             {resource.city} · listed by{" "}
-            <Link href={`/profile/${resource.providerId}`} className="text-teal-700 hover:underline">
+            <Link href={`/profile/${resource.providerId}`} className="text-gray-900 hover:underline">
               {resource.provider.name}
             </Link>
           </p>
@@ -83,7 +83,7 @@ export default async function ResourceDetailPage({
         </div>
 
         {isOwner && utilization && (
-          <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-2">
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2">
             <h3 className="font-semibold text-sm">Your listing</h3>
             <p className="text-sm text-gray-600">
               {utilization.utilizationPct}% utilized over the last {utilization.windowDays} days
@@ -91,8 +91,8 @@ export default async function ResourceDetailPage({
                 <span className="text-orange-700 font-medium"> — considered idle</span>
               )}
             </p>
-            {seasonalInsight && <p className="text-xs text-teal-700">💡 {seasonalInsight}</p>}
-            <Link href={`/resources/${resource.id}/edit`} className="text-sm text-teal-700 font-medium hover:underline">
+            {seasonalInsight && <p className="text-xs text-gray-900">💡 {seasonalInsight}</p>}
+            <Link href={`/resources/${resource.id}/edit`} className="text-sm text-gray-900 font-medium hover:underline">
               Edit listing
             </Link>
           </div>
@@ -106,7 +106,7 @@ export default async function ResourceDetailPage({
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-3">
+    <div className="bg-white border border-gray-200 rounded-2xl p-3">
       <div className="text-xs text-gray-500">{label}</div>
       <div className="font-semibold">{value}</div>
     </div>

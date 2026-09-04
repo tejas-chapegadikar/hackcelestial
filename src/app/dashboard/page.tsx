@@ -3,7 +3,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getDashboardData } from "@/lib/dashboardData";
 import { RESOURCE_TYPE_LABELS } from "@/lib/utils";
-import { StarRating } from "@/components/Badges";
+import { StarRating, TypeIcon } from "@/components/Badges";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
         <div className="flex gap-2">
           <Link
             href="/resources/new"
-            className="bg-teal-600 text-white text-sm font-medium px-3 py-2 rounded-md hover:bg-teal-700"
+            className="bg-gray-900 text-white text-sm font-medium px-3 py-2 rounded-full hover:bg-gray-800"
           >
             + List a resource
           </Link>
@@ -35,7 +35,7 @@ export default async function DashboardPage() {
         <StatCard label="Pending inbox" value={data.pendingInbox} sub={data.urgentInbox > 0 ? `${data.urgentInbox} urgent` : undefined} href="/requests?role=provider" />
         <StatCard label="My active requests" value={data.myActiveRequests} href="/requests?role=seeker" />
         <StatCard label="My bundles" value={data.myBundles} href="/bundles" />
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4">
           <div className="text-xs text-gray-500 mb-1">Trust score</div>
           {data.trust.count > 0 ? (
             <>
@@ -49,12 +49,12 @@ export default async function DashboardPage() {
       </div>
 
       {data.pendingReviews.length > 0 && (
-        <section className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <section className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
           <h2 className="font-semibold text-amber-900 mb-2">Reviews to leave</h2>
           <ul className="space-y-1">
             {data.pendingReviews.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/requests/${r.id}`} className="text-teal-700 hover:underline">
+                <Link href={`/requests/${r.id}`} className="text-gray-900 hover:underline">
                   Rate your experience with &quot;{r.resource.title}&quot;
                 </Link>
               </li>
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
       )}
 
       {data.idleAlerts.length > 0 && (
-        <section className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <section className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
           <h2 className="font-semibold text-orange-900 mb-2">Idle asset alerts</h2>
           <ul className="space-y-1">
             {data.idleAlerts.map((r) => (
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
         {data.myResources.length === 0 ? (
           <p className="text-sm text-gray-500">
             You haven&apos;t listed any resources yet.{" "}
-            <Link href="/resources/new" className="text-teal-700 font-medium">
+            <Link href="/resources/new" className="text-gray-900 font-medium">
               List one now
             </Link>
             .
@@ -93,12 +93,15 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {data.myResources.map((r) => (
-              <div key={r.id} className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-1">
-                  <Link href={`/resources/${r.id}`} className="font-medium hover:underline">
-                    {r.title}
-                  </Link>
-                  <span className="text-xs text-gray-500">{RESOURCE_TYPE_LABELS[r.type]}</span>
+              <div key={r.id} className="bg-white border border-gray-200 rounded-2xl p-4">
+                <div className="flex items-start gap-3 mb-2">
+                  <TypeIcon type={r.type} size="sm" />
+                  <div className="min-w-0">
+                    <Link href={`/resources/${r.id}`} className="font-medium hover:underline block truncate">
+                      {r.title}
+                    </Link>
+                    <span className="text-xs text-gray-500">{RESOURCE_TYPE_LABELS[r.type]}</span>
+                  </div>
                 </div>
                 <div className="text-xs text-gray-500 mb-2">
                   {r.status === "INACTIVE" ? "Inactive · " : ""}
@@ -106,12 +109,12 @@ export default async function DashboardPage() {
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-1.5">
                   <div
-                    className="bg-teal-500 h-1.5 rounded-full"
+                    className="bg-gray-900 h-1.5 rounded-full"
                     style={{ width: `${Math.min(100, r.utilization.utilizationPct)}%` }}
                   />
                 </div>
                 {r.seasonalInsight && (
-                  <p className="text-xs text-teal-700 mt-2">💡 {r.seasonalInsight}</p>
+                  <p className="text-xs text-gray-900 mt-2">💡 {r.seasonalInsight}</p>
                 )}
               </div>
             ))}
@@ -136,7 +139,7 @@ function StatCard({
   return (
     <Link
       href={href}
-      className="bg-white border border-gray-200 rounded-lg p-4 hover:border-teal-300 transition-colors"
+      className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors"
     >
       <div className="text-xs text-gray-500 mb-1">{label}</div>
       <div className="text-2xl font-semibold">{value}</div>

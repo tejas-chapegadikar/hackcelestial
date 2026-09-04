@@ -30,7 +30,7 @@ export default function ProfileEditForm({ business }: { business: Business }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 bg-white border border-gray-200 rounded-lg p-4 max-w-sm">
+    <form onSubmit={handleSubmit} className="space-y-3 bg-white border border-gray-200 rounded-2xl p-4 max-w-sm">
       <h3 className="font-semibold text-sm">Edit profile</h3>
       <div>
         <label className="block text-xs font-medium text-gray-600 mb-1">Business name</label>
@@ -67,11 +67,11 @@ export default function ProfileEditForm({ business }: { business: Business }) {
       <button
         type="submit"
         disabled={saving}
-        className="bg-teal-600 text-white text-sm font-medium px-3 py-1.5 rounded-md hover:bg-teal-700 disabled:opacity-50"
+        className="bg-gray-900 text-white text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-800 disabled:opacity-50"
       >
         {saving ? "Saving..." : "Save"}
       </button>
-      {saved && <span className="text-xs text-teal-700 ml-2">Saved</span>}
+      {saved && <span className="text-xs text-gray-900 ml-2">Saved</span>}
     </form>
   );
 }

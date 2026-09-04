@@ -99,10 +99,10 @@ export default function BundleDetailPage() {
         </p>
       </div>
 
-      {message && <p className="text-sm text-teal-700">{message}</p>}
+      {message && <p className="text-sm text-gray-900">{message}</p>}
 
       {matches && (matches.fullFulfillment.length > 0 || matches.partialFulfillment.length > 0) && (
-        <section className="bg-white border border-gray-200 rounded-lg p-4">
+        <section className="bg-white border border-gray-200 rounded-2xl p-4">
           <h2 className="font-semibold text-sm mb-2">Providers who can fulfill this bundle</h2>
           {matches.fullFulfillment.length > 0 && (
             <div className="mb-3">
@@ -133,7 +133,7 @@ export default function BundleDetailPage() {
         {bundle.items.map((item) => {
           const itemMatch = matches?.itemMatches[item.id];
           return (
-            <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4">
+            <div key={item.id} className="bg-white border border-gray-200 rounded-2xl p-4">
               <h3 className="font-semibold text-sm mb-2">
                 {RESOURCE_TYPE_LABELS[item.type]} · Qty {item.quantityNeeded}
                 {item.capacityNeeded ? ` · Capacity ${item.capacityNeeded}` : ""}
@@ -147,7 +147,7 @@ export default function BundleDetailPage() {
                     return (
                       <li key={m.resourceId} className="flex items-center justify-between text-sm">
                         <div>
-                          <Link href={`/resources/${m.resourceId}`} className="text-teal-700 hover:underline font-medium">
+                          <Link href={`/resources/${m.resourceId}`} className="text-gray-900 hover:underline font-medium">
                             {m.title}
                           </Link>
                           <span className="text-gray-500"> by {m.providerName}</span>
@@ -179,7 +179,7 @@ export default function BundleDetailPage() {
           <ul className="space-y-1">
             {bundle.requests.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/requests/${r.id}`} className="text-teal-700 hover:underline">
+                <Link href={`/requests/${r.id}`} className="text-gray-900 hover:underline">
                   {r.resource.title}
                 </Link>{" "}
                 — {r.status}

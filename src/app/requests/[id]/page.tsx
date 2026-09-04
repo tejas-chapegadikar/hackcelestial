@@ -158,12 +158,12 @@ export default function RequestDetailPage() {
       </div>
 
       {alternatives && alternatives.length > 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4">
           <h3 className="font-semibold text-blue-900 mb-2">Suggested alternatives</h3>
           <ul className="space-y-1">
             {alternatives.map((a) => (
               <li key={a.resource.id} className="text-sm">
-                <Link href={`/resources/${a.resource.id}`} className="text-teal-700 hover:underline">
+                <Link href={`/resources/${a.resource.id}`} className="text-gray-900 hover:underline">
                   {a.resource.title}
                 </Link>{" "}
                 — {formatCurrency(a.resource.pricePerUnit)} in {a.resource.city}
@@ -173,17 +173,17 @@ export default function RequestDetailPage() {
         </div>
       )}
 
-      <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+      <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
         <h3 className="font-semibold text-sm">Negotiation timeline</h3>
         <ul className="space-y-3">
           {request.negotiation.map((m) => (
-            <li key={m.id} className="text-sm border-l-2 border-teal-200 pl-3">
+            <li key={m.id} className="text-sm border-l-2 border-gray-200 pl-3">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-medium">{m.sender.name}</span>
                 <span className="text-xs text-gray-400">{formatDateTime(m.createdAt)}</span>
                 <span className="text-xs uppercase tracking-wide text-gray-400">{m.type}</span>
               </div>
-              {m.price != null && <div className="text-teal-700 font-medium">{formatCurrency(m.price)}</div>}
+              {m.price != null && <div className="text-gray-900 font-medium">{formatCurrency(m.price)}</div>}
               {m.message && <div className="text-gray-700">{m.message}</div>}
             </li>
           ))}
@@ -267,7 +267,7 @@ export default function RequestDetailPage() {
             <button
               disabled={busy}
               onClick={() => doAction("COMPLETE")}
-              className="bg-teal-600 text-white text-sm font-medium px-3 py-1.5 rounded-md hover:bg-teal-700 disabled:opacity-50"
+              className="bg-gray-900 text-white text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-800 disabled:opacity-50"
             >
               Mark completed
             </button>
@@ -285,7 +285,7 @@ export default function RequestDetailPage() {
       </div>
 
       {request.status === "COMPLETED" && (
-        <div className="bg-white border border-gray-200 rounded-lg p-4 space-y-3">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
           <h3 className="font-semibold text-sm">Reviews</h3>
           {request.reviews.map((r) => (
             <div key={r.id} className="text-sm">
@@ -343,7 +343,7 @@ export default function RequestDetailPage() {
               <button
                 disabled={busy}
                 onClick={submitReview}
-                className="bg-teal-600 text-white text-sm font-medium px-3 py-1.5 rounded-md hover:bg-teal-700 disabled:opacity-50"
+                className="bg-gray-900 text-white text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-800 disabled:opacity-50"
               >
                 Submit review
               </button>

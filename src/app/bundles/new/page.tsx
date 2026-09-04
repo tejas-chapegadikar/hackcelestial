@@ -92,13 +92,13 @@ export default function NewBundlePage() {
             <button
               type="button"
               onClick={() => setItems((its) => [...its, { ...emptyItem }])}
-              className="text-sm text-teal-700 font-medium"
+              className="text-sm text-gray-900 font-medium"
             >
               + Add another resource
             </button>
           </div>
           {items.map((it, idx) => (
-            <div key={idx} className="bg-white border border-gray-200 rounded-lg p-3 grid sm:grid-cols-4 gap-2">
+            <div key={idx} className="bg-white border border-gray-200 rounded-2xl p-3 grid sm:grid-cols-4 gap-2">
               <select
                 value={it.type}
                 onChange={(e) => updateItem(idx, { type: e.target.value })}
@@ -151,7 +151,7 @@ export default function NewBundlePage() {
         <button
           type="submit"
           disabled={loading}
-          className="bg-teal-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-teal-700 disabled:opacity-50"
+          className="bg-gray-900 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
         >
           {loading ? "Creating..." : "Create bundle & find matches"}
         </button>
