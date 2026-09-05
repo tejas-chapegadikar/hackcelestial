@@ -35,7 +35,8 @@ export async function GET(
   const providerCoverage = new Map<string, Set<string>>();
   const providerNames = new Map<string, string>();
 
-  for (const item of bundle.items) {
+  await Promise.all(
+    bundle.items.map(async (item) => {
     const candidates = await prisma.resource.findMany({
       where: { status: "ACTIVE", type: item.type },
       include: {
@@ -94,7 +95,8 @@ export async function GET(
         };
       }),
     };
-  }
+    })
+  );
 
   const totalItems = bundle.items.length;
   const fullFulfillment: { providerId: string; providerName: string; itemCount: number }[] = [];

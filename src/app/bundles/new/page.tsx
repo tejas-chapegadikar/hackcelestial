@@ -56,7 +56,7 @@ export default function NewBundlePage() {
     <div className="max-w-2xl">
       <h1 className="text-2xl font-semibold text-gray-900 mb-6">Build an event bundle</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="sm:col-span-2">
             <Label>Event title</Label>
             <Input required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Sharma Wedding, Dec 12" />
@@ -83,7 +83,7 @@ export default function NewBundlePage() {
             </button>
           </div>
           {items.map((it, idx) => (
-            <Card key={idx} className="p-3 grid sm:grid-cols-4 gap-2">
+            <Card key={idx} className="p-3 grid grid-cols-1 sm:grid-cols-4 gap-2">
               <Select value={it.type} onChange={(e) => updateItem(idx, { type: e.target.value })} className="sm:col-span-1">
                 {Object.entries(RESOURCE_TYPE_LABELS).map(([v, l]) => (
                   <option key={v} value={v}>

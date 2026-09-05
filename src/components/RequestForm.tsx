@@ -9,7 +9,7 @@ import { Button, Card, Input, Label, Textarea } from "@/components/ui";
 
 type Props = {
   resourceId: string;
-  resource: { pricePerUnit: number; unit: "HOUR" | "DAY"; depositAmount: number | null };
+  resource: { pricePerUnit: number; unit: "HOUR" | "DAY"; depositAmount: number | null; quantity: number };
 };
 
 export default function RequestForm({ resourceId, resource }: Props) {
@@ -79,7 +79,7 @@ export default function RequestForm({ resourceId, resource }: Props) {
     <Card className="p-4">
       <form onSubmit={handleSubmit} className="space-y-3">
         <h3 className="font-semibold text-gray-900">Request this resource</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <Label size="sm">From</Label>
             <Input type="date" required value={form.startDate} onChange={(e) => update("startDate", e.target.value)} />
@@ -89,13 +89,17 @@ export default function RequestForm({ resourceId, resource }: Props) {
             <Input type="date" required value={form.endDate} onChange={(e) => update("endDate", e.target.value)} />
           </div>
           <div>
-            <Label size="sm">Quantity needed</Label>
+            <Label size="sm">Quantity needed ({resource.quantity} available)</Label>
             <Input
               type="number"
               min={1}
+              max={resource.quantity}
               value={form.quantityNeeded}
               onChange={(e) => update("quantityNeeded", e.target.value)}
             />
+            {Number(form.quantityNeeded) > resource.quantity && (
+              <p className="text-xs text-red-600 mt-1">Only {resource.quantity} available.</p>
+            )}
           </div>
           <div>
             <Label size="sm">Capacity needed</Label>
@@ -130,8 +134,8 @@ export default function RequestForm({ resourceId, resource }: Props) {
           <div className="rounded-xl bg-gray-50 border border-gray-200 p-3 space-y-1.5 text-sm">
             <div className="flex justify-between text-gray-600">
               <span>
-                {formatCurrency(resource.pricePerUnit)} × {quote.units} {resource.unit.toLowerCase()}(s) ×{" "}
-                {form.quantityNeeded || 1}
+                {formatCurrency(resource.pricePerUnit)}/item × {quote.units} {resource.unit.toLowerCase()}(s) ×{" "}
+                {form.quantityNeeded || 1} item(s)
               </span>
               <span>{formatCurrency(quote.basePrice)}</span>
             </div>

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { MapPin, Phone, ShieldCheck } from "lucide-react";
 import { cn, formatCurrency, formatDate, formatDateTime, RESOURCE_TYPE_LABELS } from "@/lib/utils";
 import { RequestStatusBadge, UrgentBadge, StarRating } from "@/components/Badges";
 import { Button, Card, Input, Label, Textarea } from "@/components/ui";
@@ -37,9 +37,9 @@ type RequestDetail = {
     type: string;
     pricePerUnit: number;
     unit: string;
-    provider: { id: string; name: string };
+    provider: { id: string; name: string; phone: string | null; address: string | null };
   };
-  seeker: { id: string; name: string };
+  seeker: { id: string; name: string; phone: string | null; address: string | null };
   negotiation: NegotiationMsg[];
   reviews: { id: string; fromId: string; rating: number; comment: string | null }[];
 };
@@ -231,6 +231,38 @@ export default function RequestDetailPage() {
               <span>Refundable deposit of {formatCurrency(request.depositAmount)}, returned in good condition.</span>
             </div>
           )}
+        </Card>
+      )}
+
+      {(request.status === "ACCEPTED" || request.status === "COMPLETED") && (
+        <Card className="p-4 space-y-2">
+          <h3 className="font-semibold text-sm text-gray-900">
+            Contact {isSeeker ? request.resource.provider.name : request.seeker.name}
+          </h3>
+          <p className="text-xs text-gray-500 -mt-1">
+            Request accepted — use these details to arrange pickup, delivery or transportation.
+          </p>
+          {(() => {
+            const other = isSeeker ? request.resource.provider : request.seeker;
+            return (
+              <div className="space-y-1.5 text-sm">
+                {other.phone ? (
+                  <a href={`tel:${other.phone}`} className="flex items-center gap-2 text-teal-700 hover:text-teal-800 font-medium">
+                    <Phone className="w-4 h-4 shrink-0" strokeWidth={2} />
+                    {other.phone}
+                  </a>
+                ) : (
+                  <p className="text-gray-500">No phone number on file yet.</p>
+                )}
+                {other.address && (
+                  <p className="flex items-start gap-2 text-gray-600">
+                    <MapPin className="w-4 h-4 shrink-0 mt-0.5" strokeWidth={2} />
+                    {other.address}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </Card>
       )}
 

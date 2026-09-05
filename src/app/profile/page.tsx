@@ -12,23 +12,23 @@ export default async function ProfilePage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const business = await prisma.business.findUnique({ where: { id: session.user.id } });
+  const [business, resources, reviews] = await Promise.all([
+    prisma.business.findUnique({ where: { id: session.user.id } }),
+    prisma.resource.findMany({
+      where: { providerId: session.user.id },
+      select: { id: true, title: true, type: true },
+    }),
+    prisma.review.findMany({
+      where: { toId: session.user.id },
+      include: { from: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
   if (!business) redirect("/login");
-
-  const resources = await prisma.resource.findMany({
-    where: { providerId: business.id },
-    select: { id: true, title: true, type: true },
-  });
-
-  const reviews = await prisma.review.findMany({
-    where: { toId: business.id },
-    include: { from: { select: { name: true } } },
-    orderBy: { createdAt: "desc" },
-  });
   const trust = computeTrustScore(reviews);
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">{business.name}</h1>

@@ -15,9 +15,9 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/resources/new" className={buttonClasses("primary")}>
             <Plus className="w-4 h-4" strokeWidth={2.5} />
             List a resource
@@ -29,7 +29,7 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard label="Pending inbox" value={data.pendingInbox} sub={data.urgentInbox > 0 ? `${data.urgentInbox} urgent` : undefined} href="/requests?role=provider" />
         <StatCard label="My active requests" value={data.myActiveRequests} href="/requests?role=seeker" />
         <StatCard label="My bundles" value={data.myBundles} href="/bundles" />
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
             .
           </p>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {data.myResources.map((r) => (
               <Card key={r.id} interactive className="p-4">
                 <div className="flex items-start gap-3 mb-2">

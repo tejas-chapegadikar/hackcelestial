@@ -96,7 +96,7 @@ export default function EditResourceForm({ resource }: Props) {
             <Label>Description</Label>
             <Textarea value={form.description} onChange={(e) => update("description", e.target.value)} rows={3} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <Label>Quantity</Label>
               <Input type="number" min={1} value={form.quantity} onChange={(e) => update("quantity", e.target.value)} />
@@ -106,9 +106,9 @@ export default function EditResourceForm({ resource }: Props) {
               <Input type="number" min={1} value={form.capacity} onChange={(e) => update("capacity", e.target.value)} />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <Label>Price per {resource.unit.toLowerCase()} (₹)</Label>
+              <Label>Price per item, per {resource.unit.toLowerCase()} (₹)</Label>
               <Input
                 type="number"
                 min={0}

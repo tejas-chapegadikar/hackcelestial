@@ -18,19 +18,19 @@ export default async function PublicProfilePage({
   const { id } = await params;
   if (id === session.user.id) redirect("/profile");
 
-  const business = await prisma.business.findUnique({ where: { id } });
+  const [business, resources, reviews] = await Promise.all([
+    prisma.business.findUnique({ where: { id } }),
+    prisma.resource.findMany({
+      where: { providerId: id, status: "ACTIVE" },
+      select: { id: true, title: true, type: true },
+    }),
+    prisma.review.findMany({
+      where: { toId: id },
+      include: { from: { select: { name: true } } },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
   if (!business) notFound();
-
-  const resources = await prisma.resource.findMany({
-    where: { providerId: business.id, status: "ACTIVE" },
-    select: { id: true, title: true, type: true },
-  });
-
-  const reviews = await prisma.review.findMany({
-    where: { toId: business.id },
-    include: { from: { select: { name: true } } },
-    orderBy: { createdAt: "desc" },
-  });
   const trust = computeTrustScore(reviews);
 
   return (

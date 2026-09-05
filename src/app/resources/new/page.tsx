@@ -109,7 +109,7 @@ export default function NewResourcePage() {
           <Label>Description</Label>
           <Textarea value={form.description} onChange={(e) => update("description", e.target.value)} rows={3} />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <Label>Quantity available</Label>
             <Input
@@ -131,7 +131,7 @@ export default function NewResourcePage() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <Label>Rental unit</Label>
             <Select value={form.unit} onChange={(e) => update("unit", e.target.value)}>
@@ -155,7 +155,7 @@ export default function NewResourcePage() {
           <Input required value={form.city} onChange={(e) => update("city", e.target.value)} />
         </div>
         <div>
-          <Label>Price per {form.unit.toLowerCase()} (₹)</Label>
+          <Label>Price per item, per {form.unit.toLowerCase()} (₹)</Label>
           <Input
             type="number"
             min={0}
@@ -163,6 +163,11 @@ export default function NewResourcePage() {
             value={form.pricePerUnit}
             onChange={(e) => update("pricePerUnit", e.target.value)}
           />
+          <p className="text-xs text-gray-500 mt-1.5">
+            {Number(form.quantity) > 1
+              ? `The price for a single item — a seeker requesting all ${form.quantity} for a day would pay ${form.pricePerUnit ? `₹${(Number(form.pricePerUnit) * Number(form.quantity)).toLocaleString("en-IN")}` : "this × " + form.quantity}.`
+              : "The price for this listing, per " + form.unit.toLowerCase() + "."}
+          </p>
           {benchmark && (
             <p className="flex items-start gap-1.5 text-xs text-gray-600 mt-1.5">
               <Lightbulb className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" strokeWidth={2} />

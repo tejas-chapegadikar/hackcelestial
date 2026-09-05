@@ -86,7 +86,7 @@ export default function ResourcesPage() {
             e.preventDefault();
             search();
           }}
-          className="grid sm:grid-cols-3 lg:grid-cols-4 gap-3"
+          className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-3"
         >
           <div>
             <Label size="sm">Type</Label>
@@ -176,7 +176,7 @@ export default function ResourcesPage() {
         <p className="text-sm text-gray-500">No resources match your criteria.</p>
       )}
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {results?.map((r) => (
           <Link key={r.resource.id} href={`/resources/${r.resource.id}`} className={`${cardClasses(true)} p-4 flex flex-col gap-2`}>
             <div className="flex items-start justify-between gap-2">

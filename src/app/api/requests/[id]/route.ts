@@ -18,8 +18,10 @@ export async function GET(
   const request = await prisma.request.findUnique({
     where: { id },
     include: {
-      resource: { include: { provider: { select: { id: true, name: true, city: true } } } },
-      seeker: { select: { id: true, name: true, city: true } },
+      resource: {
+        include: { provider: { select: { id: true, name: true, city: true, phone: true, address: true } } },
+      },
+      seeker: { select: { id: true, name: true, city: true, phone: true, address: true } },
       negotiation: { include: { sender: { select: { id: true, name: true } } }, orderBy: { createdAt: "asc" } },
       reviews: true,
       bundle: true,

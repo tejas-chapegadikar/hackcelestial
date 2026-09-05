@@ -33,7 +33,7 @@ export default async function BundlesPage() {
 
       {bundles.length === 0 && <p className="text-sm text-gray-500">No bundles yet.</p>}
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {bundles.map((b) => (
           <Link key={b.id} href={`/bundles/${b.id}`} className={`${cardClasses(true)} p-4`}>
             <div className="font-medium text-gray-900">{b.title}</div>

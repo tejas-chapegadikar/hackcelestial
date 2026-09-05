@@ -20,26 +20,34 @@ export default async function ResourceDetailPage({
   if (!session?.user?.id) redirect("/login");
 
   const { id } = await params;
+  // A single query: reviews are pulled in via the provider relation instead of
+  // a second round-trip, since resolving `reviews.toId = resource.providerId`
+  // separately would otherwise have to wait on this query's result first anyway.
   const resource = await prisma.resource.findUnique({
     where: { id },
     include: {
-      provider: { select: { id: true, name: true, city: true, businessType: true } },
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          city: true,
+          businessType: true,
+          phone: true,
+          reviewsReceived: { select: { rating: true, onTime: true, conditionOk: true, punctual: true } },
+        },
+      },
       requests: { select: { startDate: true, endDate: true, status: true } },
     },
   });
   if (!resource) notFound();
 
-  const reviews = await prisma.review.findMany({
-    where: { toId: resource.providerId },
-    select: { rating: true, onTime: true, conditionOk: true, punctual: true },
-  });
-  const trust = computeTrustScore(reviews);
+  const trust = computeTrustScore(resource.provider.reviewsReceived);
   const isOwner = resource.providerId === session.user.id;
   const utilization = isOwner ? computeUtilization(resource.requests) : null;
   const seasonalInsight = isOwner ? getSeasonalInsight(resource.type, new Date().getMonth()) : null;
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-4">
         <div>
           <div className="text-xs text-gray-500 mb-1">{RESOURCE_TYPE_LABELS[resource.type]}</div>
@@ -55,8 +63,8 @@ export default async function ResourceDetailPage({
         {resource.description && <p className="text-gray-700">{resource.description}</p>}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <Stat label="Price" value={`${formatCurrency(resource.pricePerUnit)}/${resource.unit.toLowerCase()}`} />
-          <Stat label="Quantity" value={String(resource.quantity)} />
+          <Stat label="Price per item" value={`${formatCurrency(resource.pricePerUnit)}/${resource.unit.toLowerCase()}`} />
+          <Stat label="Quantity available" value={String(resource.quantity)} />
           {resource.capacity != null && <Stat label="Capacity" value={String(resource.capacity)} />}
           <Stat label="Min. rental" value={`${resource.minRentalPeriod} ${resource.unit.toLowerCase()}(s)`} />
           {resource.depositAmount != null && (
@@ -113,7 +121,12 @@ export default async function ResourceDetailPage({
         {!isOwner && resource.status === "ACTIVE" && (
           <RequestForm
             resourceId={resource.id}
-            resource={{ pricePerUnit: resource.pricePerUnit, unit: resource.unit, depositAmount: resource.depositAmount }}
+            resource={{
+              pricePerUnit: resource.pricePerUnit,
+              unit: resource.unit,
+              depositAmount: resource.depositAmount,
+              quantity: resource.quantity,
+            }}
           />
         )}
       </div>
