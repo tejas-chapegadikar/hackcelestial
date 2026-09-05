@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { Lightbulb } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { computeTrustScore } from "@/lib/matching";
@@ -7,6 +8,7 @@ import { computeUtilization } from "@/lib/utilization";
 import { getSeasonalInsight } from "@/lib/seasonal";
 import { RESOURCE_TYPE_LABELS, formatCurrency } from "@/lib/utils";
 import { StarRating } from "@/components/Badges";
+import { Card } from "@/components/ui";
 import RequestForm from "@/components/RequestForm";
 
 export default async function ResourceDetailPage({
@@ -41,10 +43,10 @@ export default async function ResourceDetailPage({
       <div className="lg:col-span-2 space-y-4">
         <div>
           <div className="text-xs text-gray-500 mb-1">{RESOURCE_TYPE_LABELS[resource.type]}</div>
-          <h1 className="text-2xl font-semibold">{resource.title}</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">{resource.title}</h1>
           <p className="text-sm text-gray-600 mt-1">
             {resource.city} · listed by{" "}
-            <Link href={`/profile/${resource.providerId}`} className="text-gray-900 hover:underline">
+            <Link href={`/profile/${resource.providerId}`} className="text-teal-600 hover:text-teal-700 hover:underline">
               {resource.provider.name}
             </Link>
           </p>
@@ -57,6 +59,9 @@ export default async function ResourceDetailPage({
           <Stat label="Quantity" value={String(resource.quantity)} />
           {resource.capacity != null && <Stat label="Capacity" value={String(resource.capacity)} />}
           <Stat label="Min. rental" value={`${resource.minRentalPeriod} ${resource.unit.toLowerCase()}(s)`} />
+          {resource.depositAmount != null && (
+            <Stat label="Refundable deposit" value={formatCurrency(resource.depositAmount)} />
+          )}
         </div>
 
         {resource.amenities.length > 0 && (
@@ -83,32 +88,44 @@ export default async function ResourceDetailPage({
         </div>
 
         {isOwner && utilization && (
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-2">
-            <h3 className="font-semibold text-sm">Your listing</h3>
+          <Card className="p-4 space-y-2">
+            <h3 className="font-semibold text-sm text-gray-900">Your listing</h3>
             <p className="text-sm text-gray-600">
               {utilization.utilizationPct}% utilized over the last {utilization.windowDays} days
               {utilization.idle && (
-                <span className="text-orange-700 font-medium"> — considered idle</span>
+                <span className="text-orange-600 font-medium"> — considered idle</span>
               )}
             </p>
-            {seasonalInsight && <p className="text-xs text-gray-900">💡 {seasonalInsight}</p>}
-            <Link href={`/resources/${resource.id}/edit`} className="text-sm text-gray-900 font-medium hover:underline">
+            {seasonalInsight && (
+              <p className="flex items-start gap-1.5 text-xs text-gray-600">
+                <Lightbulb className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" strokeWidth={2} />
+                {seasonalInsight}
+              </p>
+            )}
+            <Link href={`/resources/${resource.id}/edit`} className="text-sm text-teal-600 font-medium hover:text-teal-700 hover:underline inline-block">
               Edit listing
             </Link>
-          </div>
+          </Card>
         )}
       </div>
 
-      <div>{!isOwner && resource.status === "ACTIVE" && <RequestForm resourceId={resource.id} />}</div>
+      <div>
+        {!isOwner && resource.status === "ACTIVE" && (
+          <RequestForm
+            resourceId={resource.id}
+            resource={{ pricePerUnit: resource.pricePerUnit, unit: resource.unit, depositAmount: resource.depositAmount }}
+          />
+        )}
+      </div>
     </div>
   );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-2xl p-3">
+    <Card className="p-3">
       <div className="text-xs text-gray-500">{label}</div>
-      <div className="font-semibold">{value}</div>
-    </div>
+      <div className="font-semibold text-gray-900">{value}</div>
+    </Card>
   );
 }

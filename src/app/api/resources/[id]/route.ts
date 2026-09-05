@@ -44,6 +44,7 @@ const updateSchema = z.object({
   unit: z.enum(["HOUR", "DAY"]).optional(),
   pricePerUnit: z.number().positive().optional(),
   minRentalPeriod: z.number().int().positive().optional(),
+  depositAmount: z.number().positive().optional(),
   amenities: z.array(z.string()).optional(),
   city: z.string().min(2).optional(),
   lat: z.number().optional(),

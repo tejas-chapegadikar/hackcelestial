@@ -4,6 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
+import { Button, Card, Input, Label } from "@/components/ui";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,45 +29,36 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-sm mx-auto mt-8">
-      <h1 className="text-2xl font-semibold mb-1">Log in</h1>
-      <p className="text-sm text-gray-600 mb-6">
-        Demo accounts: provider1@demo.com / seeker1@demo.com, password{" "}
-        <code className="bg-gray-100 px-1 rounded">password123</code>
-      </p>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gray-900 text-white rounded-full py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-        >
-          {loading ? "Logging in..." : "Log in"}
-        </button>
-      </form>
-      <p className="text-sm text-gray-600 mt-4">
+    <div className="max-w-sm mx-auto mt-8 bg-glow">
+      <div className="flex justify-center mb-6">
+        <span className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-sm shadow-teal-600/30">
+          <Sparkles className="w-5 h-5" strokeWidth={2.25} />
+        </span>
+      </div>
+      <Card className="p-6">
+        <h1 className="text-xl font-semibold text-gray-900 mb-1 text-center">Welcome back</h1>
+        <p className="text-sm text-gray-500 mb-6 text-center">
+          Demo: provider1@demo.com / seeker1@demo.com, password{" "}
+          <code className="bg-gray-100 px-1 rounded text-xs">password123</code>
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label>Email</Label>
+            <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div>
+            <Label>Password</Label>
+            <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          </div>
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "Logging in..." : "Log in"}
+          </Button>
+        </form>
+      </Card>
+      <p className="text-sm text-gray-500 mt-4 text-center">
         No account?{" "}
-        <Link href="/signup" className="text-gray-900 font-medium">
+        <Link href="/signup" className="text-teal-600 font-medium hover:text-teal-700">
           Sign up
         </Link>
       </p>

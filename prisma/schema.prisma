@@ -102,6 +102,8 @@ model Resource {
   unit             RentalUnit     @default(DAY)
   pricePerUnit     Float
   minRentalPeriod  Int            @default(1)
+  /// Optional refundable deposit the provider asks for, returned once the item is back in good condition.
+  depositAmount    Float?
   amenities        String[]       @default([])
   city             String
   lat              Float?
@@ -163,6 +165,14 @@ model Request {
   capacityNeeded  Int?
   budget          Float?
   urgent          Boolean       @default(false)
+  /// Auto-computed opening price at the resource's normal rate (pricePerUnit x units x quantity), before any urgent surcharge.
+  basePrice          Float?
+  /// Surcharge fraction applied because the request was urgent (e.g. 0.25 for +25%); null/0 for advance bookings.
+  urgentSurchargePct Float?
+  /// basePrice plus the urgent surcharge — the opening ask shown to both sides before negotiation.
+  totalPrice         Float?
+  /// Snapshot of the resource's deposit at request time, so it stays stable even if the listing's deposit later changes.
+  depositAmount      Float?
   status          RequestStatus @default(PENDING)
   createdAt       DateTime      @default(now())
 

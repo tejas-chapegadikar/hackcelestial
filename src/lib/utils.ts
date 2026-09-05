@@ -1,3 +1,14 @@
+import {
+  Landmark,
+  SquareParking,
+  Car,
+  ChefHat,
+  Armchair,
+  Presentation,
+  Package,
+  type LucideIcon,
+} from "lucide-react";
+
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
@@ -85,50 +96,63 @@ export const REQUEST_STATUS_LABELS: Record<string, string> = {
   COMPLETED: "Completed",
 };
 
-export type TypeStyle = { icon: string; chip: string; iconBg: string; bar: string };
+export type TypeStyle = {
+  icon: LucideIcon;
+  chip: string;
+  bg: string;
+  text: string;
+  bar: string;
+};
 
-/** One accent color per resource type — the only spot of color in an otherwise black/white UI. */
+/** One accent color per resource type — the through-line of color in an otherwise neutral UI. */
 export const RESOURCE_TYPE_STYLES: Record<string, TypeStyle> = {
   BANQUET_SPACE: {
-    icon: "🏛️",
-    chip: "bg-violet-50 text-violet-700",
-    iconBg: "bg-violet-100",
-    bar: "bg-violet-500",
-  },
-  PARKING: {
-    icon: "🅿️",
-    chip: "bg-blue-50 text-blue-700",
-    iconBg: "bg-blue-100",
-    bar: "bg-blue-500",
-  },
-  VEHICLE: {
-    icon: "🚐",
+    icon: Landmark,
     chip: "bg-amber-50 text-amber-700",
-    iconBg: "bg-amber-100",
+    bg: "bg-amber-50",
+    text: "text-amber-600",
     bar: "bg-amber-500",
   },
+  PARKING: {
+    icon: SquareParking,
+    chip: "bg-stone-100 text-stone-700",
+    bg: "bg-stone-100",
+    text: "text-stone-600",
+    bar: "bg-stone-500",
+  },
+  VEHICLE: {
+    icon: Car,
+    chip: "bg-orange-50 text-orange-700",
+    bg: "bg-orange-50",
+    text: "text-orange-600",
+    bar: "bg-orange-500",
+  },
   KITCHEN: {
-    icon: "🍳",
-    chip: "bg-rose-50 text-rose-700",
-    iconBg: "bg-rose-100",
-    bar: "bg-rose-500",
+    icon: ChefHat,
+    chip: "bg-yellow-50 text-yellow-700",
+    bg: "bg-yellow-50",
+    text: "text-yellow-600",
+    bar: "bg-yellow-500",
   },
   FURNITURE: {
-    icon: "🪑",
+    icon: Armchair,
     chip: "bg-emerald-50 text-emerald-700",
-    iconBg: "bg-emerald-100",
+    bg: "bg-emerald-50",
+    text: "text-emerald-600",
     bar: "bg-emerald-500",
   },
   AV_EQUIPMENT: {
-    icon: "🎛️",
-    chip: "bg-cyan-50 text-cyan-700",
-    iconBg: "bg-cyan-100",
-    bar: "bg-cyan-500",
+    icon: Presentation,
+    chip: "bg-lime-50 text-lime-700",
+    bg: "bg-lime-50",
+    text: "text-lime-600",
+    bar: "bg-lime-500",
   },
   OTHER: {
-    icon: "📦",
+    icon: Package,
     chip: "bg-gray-100 text-gray-700",
-    iconBg: "bg-gray-100",
+    bg: "bg-gray-100",
+    text: "text-gray-500",
     bar: "bg-gray-500",
   },
 };
@@ -139,13 +163,13 @@ export function resourceTypeStyle(type: string): TypeStyle {
 
 /** Deterministic initials-avatar background, keyed off the business id. */
 const AVATAR_COLORS = [
-  "bg-violet-600",
-  "bg-blue-600",
-  "bg-emerald-600",
-  "bg-amber-600",
-  "bg-rose-600",
-  "bg-cyan-600",
-  "bg-indigo-600",
+  "bg-gradient-to-br from-teal-500 to-emerald-600",
+  "bg-gradient-to-br from-amber-500 to-orange-600",
+  "bg-gradient-to-br from-emerald-500 to-teal-600",
+  "bg-gradient-to-br from-orange-500 to-amber-700",
+  "bg-gradient-to-br from-lime-500 to-emerald-600",
+  "bg-gradient-to-br from-stone-500 to-stone-700",
+  "bg-gradient-to-br from-yellow-500 to-amber-600",
 ];
 
 export function avatarColor(id: string) {

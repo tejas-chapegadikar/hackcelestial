@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { Lightbulb, Plus, Search } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { getDashboardData } from "@/lib/dashboardData";
 import { RESOURCE_TYPE_LABELS } from "@/lib/utils";
 import { StarRating, TypeIcon } from "@/components/Badges";
+import { Card, buttonClasses } from "@/components/ui";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -14,18 +16,14 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
         <div className="flex gap-2">
-          <Link
-            href="/resources/new"
-            className="bg-gray-900 text-white text-sm font-medium px-3 py-2 rounded-full hover:bg-gray-800"
-          >
-            + List a resource
+          <Link href="/resources/new" className={buttonClasses("primary")}>
+            <Plus className="w-4 h-4" strokeWidth={2.5} />
+            List a resource
           </Link>
-          <Link
-            href="/resources"
-            className="border border-gray-300 text-sm font-medium px-3 py-2 rounded-md hover:bg-gray-100"
-          >
+          <Link href="/resources" className={buttonClasses("secondary")}>
+            <Search className="w-4 h-4" strokeWidth={2} />
             Find a resource
           </Link>
         </div>
@@ -35,7 +33,7 @@ export default async function DashboardPage() {
         <StatCard label="Pending inbox" value={data.pendingInbox} sub={data.urgentInbox > 0 ? `${data.urgentInbox} urgent` : undefined} href="/requests?role=provider" />
         <StatCard label="My active requests" value={data.myActiveRequests} href="/requests?role=seeker" />
         <StatCard label="My bundles" value={data.myBundles} href="/bundles" />
-        <div className="bg-white border border-gray-200 rounded-2xl p-4">
+        <Card className="p-4">
           <div className="text-xs text-gray-500 mb-1">Trust score</div>
           {data.trust.count > 0 ? (
             <>
@@ -43,18 +41,18 @@ export default async function DashboardPage() {
               <div className="text-xs text-gray-500 mt-1">{data.trust.count} review(s)</div>
             </>
           ) : (
-            <div className="text-sm text-gray-500">No reviews yet</div>
+            <div className="text-sm text-gray-400">No reviews yet</div>
           )}
-        </div>
+        </Card>
       </div>
 
       {data.pendingReviews.length > 0 && (
-        <section className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+        <section className="bg-amber-50 border border-amber-100 rounded-2xl p-4">
           <h2 className="font-semibold text-amber-900 mb-2">Reviews to leave</h2>
           <ul className="space-y-1">
             {data.pendingReviews.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/requests/${r.id}`} className="text-gray-900 hover:underline">
+                <Link href={`/requests/${r.id}`} className="text-amber-900 hover:underline">
                   Rate your experience with &quot;{r.resource.title}&quot;
                 </Link>
               </li>
@@ -64,7 +62,7 @@ export default async function DashboardPage() {
       )}
 
       {data.idleAlerts.length > 0 && (
-        <section className="bg-orange-50 border border-orange-200 rounded-2xl p-4">
+        <section className="bg-orange-50 border border-orange-100 rounded-2xl p-4">
           <h2 className="font-semibold text-orange-900 mb-2">Idle asset alerts</h2>
           <ul className="space-y-1">
             {data.idleAlerts.map((r) => (
@@ -81,11 +79,11 @@ export default async function DashboardPage() {
       )}
 
       <section>
-        <h2 className="font-semibold mb-3">My resources</h2>
+        <h2 className="font-semibold text-gray-900 mb-3">My resources</h2>
         {data.myResources.length === 0 ? (
           <p className="text-sm text-gray-500">
             You haven&apos;t listed any resources yet.{" "}
-            <Link href="/resources/new" className="text-gray-900 font-medium">
+            <Link href="/resources/new" className="text-teal-600 font-medium hover:text-teal-700">
               List one now
             </Link>
             .
@@ -93,11 +91,11 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {data.myResources.map((r) => (
-              <div key={r.id} className="bg-white border border-gray-200 rounded-2xl p-4">
+              <Card key={r.id} interactive className="p-4">
                 <div className="flex items-start gap-3 mb-2">
                   <TypeIcon type={r.type} size="sm" />
                   <div className="min-w-0">
-                    <Link href={`/resources/${r.id}`} className="font-medium hover:underline block truncate">
+                    <Link href={`/resources/${r.id}`} className="font-medium text-gray-900 hover:underline block truncate">
                       {r.title}
                     </Link>
                     <span className="text-xs text-gray-500">{RESOURCE_TYPE_LABELS[r.type]}</span>
@@ -109,14 +107,17 @@ export default async function DashboardPage() {
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-1.5">
                   <div
-                    className="bg-gray-900 h-1.5 rounded-full"
+                    className="bg-teal-500 h-1.5 rounded-full"
                     style={{ width: `${Math.min(100, r.utilization.utilizationPct)}%` }}
                   />
                 </div>
                 {r.seasonalInsight && (
-                  <p className="text-xs text-gray-900 mt-2">💡 {r.seasonalInsight}</p>
+                  <p className="flex items-start gap-1 text-xs text-gray-600 mt-2">
+                    <Lightbulb className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" strokeWidth={2} />
+                    {r.seasonalInsight}
+                  </p>
                 )}
-              </div>
+              </Card>
             ))}
           </div>
         )}
@@ -137,12 +138,9 @@ function StatCard({
   href: string;
 }) {
   return (
-    <Link
-      href={href}
-      className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors"
-    >
+    <Link href={href} className="block bg-white border border-gray-200/80 rounded-2xl shadow-[0_1px_2px_rgba(15,23,42,0.04)] p-4 transition-all duration-150 hover:border-teal-200 hover:shadow-[0_8px_24px_-4px_rgba(13,148,136,0.12)]">
       <div className="text-xs text-gray-500 mb-1">{label}</div>
-      <div className="text-2xl font-semibold">{value}</div>
+      <div className="text-2xl font-semibold text-gray-900">{value}</div>
       {sub && <div className="text-xs text-red-600 font-medium mt-1">{sub}</div>}
     </Link>
   );

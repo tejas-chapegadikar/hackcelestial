@@ -56,7 +56,7 @@ export async function POST(
     data: { requestId: id, fromId: userId, toId, ...parsed.data },
   });
 
-  await notify(toId, "NEW_REVIEW", `You received a new ${parsed.data.rating}★ review`, `/profile`);
+  await notify(toId, "NEW_REVIEW", `You received a new ${parsed.data.rating}-star review`, `/profile`);
 
   return NextResponse.json(review, { status: 201 });
 }

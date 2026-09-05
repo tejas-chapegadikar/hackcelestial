@@ -4,7 +4,9 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Sparkles } from "lucide-react";
 import { BUSINESS_TYPE_LABELS } from "@/lib/utils";
+import { Button, Card, Input, Label, Select } from "@/components/ui";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -56,85 +58,63 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="max-w-sm mx-auto mt-8">
-      <h1 className="text-2xl font-semibold mb-1">Create a business account</h1>
-      <p className="text-sm text-gray-600 mb-6">
-        One account, both sides of the marketplace — list resources and request them.
-      </p>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Business name</label>
-          <input
-            required
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Business type</label>
-          <select
-            value={form.businessType}
-            onChange={(e) => update("businessType", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-          >
-            {Object.entries(BUSINESS_TYPE_LABELS).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-          <input
-            required
-            value={form.city}
-            onChange={(e) => update("city", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
-          <input
-            value={form.phone}
-            onChange={(e) => update("phone", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
-            type="email"
-            required
-            value={form.email}
-            onChange={(e) => update("email", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={form.password}
-            onChange={(e) => update("password", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
-        </div>
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-gray-900 text-white rounded-full py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-        >
-          {loading ? "Creating account..." : "Sign up"}
-        </button>
-      </form>
-      <p className="text-sm text-gray-600 mt-4">
+    <div className="max-w-sm mx-auto mt-8 bg-glow">
+      <div className="flex justify-center mb-6">
+        <span className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white flex items-center justify-center shadow-sm shadow-teal-600/30">
+          <Sparkles className="w-5 h-5" strokeWidth={2.25} />
+        </span>
+      </div>
+      <Card className="p-6">
+        <h1 className="text-xl font-semibold text-gray-900 mb-1 text-center">Create a business account</h1>
+        <p className="text-sm text-gray-500 mb-6 text-center">
+          One account, both sides of the marketplace — list resources and request them.
+        </p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label>Business name</Label>
+            <Input required value={form.name} onChange={(e) => update("name", e.target.value)} />
+          </div>
+          <div>
+            <Label>Business type</Label>
+            <Select value={form.businessType} onChange={(e) => update("businessType", e.target.value)}>
+              {Object.entries(BUSINESS_TYPE_LABELS).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div>
+            <Label>City</Label>
+            <Input required value={form.city} onChange={(e) => update("city", e.target.value)} />
+          </div>
+          <div>
+            <Label>Phone (optional)</Label>
+            <Input value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+          </div>
+          <div>
+            <Label>Email</Label>
+            <Input type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} />
+          </div>
+          <div>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              required
+              minLength={6}
+              value={form.password}
+              onChange={(e) => update("password", e.target.value)}
+            />
+          </div>
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "Creating account..." : "Sign up"}
+          </Button>
+        </form>
+      </Card>
+      <p className="text-sm text-gray-500 mt-4 text-center">
         Already have an account?{" "}
-        <Link href="/login" className="text-gray-900 font-medium">
+        <Link href="/login" className="text-teal-600 font-medium hover:text-teal-700">
           Log in
         </Link>
       </p>

@@ -3,7 +3,9 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { checkCompatibility, checkMinRentalPeriod, isAvailable } from "@/lib/matching";
+import { computeQuote } from "@/lib/pricing";
 import { notify } from "@/lib/notifications";
+import { formatCurrency } from "@/lib/utils";
 
 const createSchema = z.object({
   resourceId: z.string(),
@@ -63,6 +65,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: minRental.reason }, { status: 422 });
   }
 
+  const quote = computeQuote(resource, {
+    startDate: start,
+    endDate: end,
+    quantityNeeded: data.quantityNeeded,
+    urgent: data.urgent,
+  });
+
   const request = await prisma.request.create({
     data: {
       seekerId: session.user.id,
@@ -74,6 +83,10 @@ export async function POST(req: Request) {
       capacityNeeded: data.capacityNeeded,
       budget: data.budget,
       urgent: data.urgent,
+      basePrice: quote.basePrice,
+      urgentSurchargePct: quote.urgentSurchargePct,
+      totalPrice: quote.totalPrice,
+      depositAmount: resource.depositAmount,
     },
   });
 
@@ -91,7 +104,7 @@ export async function POST(req: Request) {
   await notify(
     resource.providerId,
     data.urgent ? "URGENT_REQUEST" : "NEW_REQUEST",
-    `${data.urgent ? "🔴 Urgent: " : ""}New request for "${resource.title}"`,
+    `${data.urgent ? "Urgent: " : ""}New request for "${resource.title}" — ${formatCurrency(quote.totalPrice)}`,
     `/requests/${request.id}`
   );
 

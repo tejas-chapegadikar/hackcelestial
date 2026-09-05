@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Business } from "@prisma/client";
+import { Button, Card, Input, Label } from "@/components/ui";
 
 export default function ProfileEditForm({ business }: { business: Business }) {
   const router = useRouter();
@@ -30,48 +31,32 @@ export default function ProfileEditForm({ business }: { business: Business }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 bg-white border border-gray-200 rounded-2xl p-4 max-w-sm">
-      <h3 className="font-semibold text-sm">Edit profile</h3>
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Business name</label>
-        <input
-          value={form.name}
-          onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">City</label>
-        <input
-          value={form.city}
-          onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
-          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Phone</label>
-        <input
-          value={form.phone}
-          onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-        />
-      </div>
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">Address</label>
-        <input
-          value={form.address}
-          onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-          className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={saving}
-        className="bg-gray-900 text-white text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-800 disabled:opacity-50"
-      >
-        {saving ? "Saving..." : "Save"}
-      </button>
-      {saved && <span className="text-xs text-gray-900 ml-2">Saved</span>}
-    </form>
+    <Card className="p-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <h3 className="font-semibold text-sm text-gray-900">Edit profile</h3>
+        <div>
+          <Label size="sm">Business name</Label>
+          <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
+        </div>
+        <div>
+          <Label size="sm">City</Label>
+          <Input value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} />
+        </div>
+        <div>
+          <Label size="sm">Phone</Label>
+          <Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+        </div>
+        <div>
+          <Label size="sm">Address</Label>
+          <Input value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} />
+        </div>
+        <div className="flex items-center gap-2">
+          <Button type="submit" size="sm" disabled={saving}>
+            {saving ? "Saving..." : "Save"}
+          </Button>
+          {saved && <span className="text-xs text-teal-600">Saved</span>}
+        </div>
+      </form>
+    </Card>
   );
 }

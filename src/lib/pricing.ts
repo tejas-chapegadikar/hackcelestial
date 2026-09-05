@@ -40,3 +40,32 @@ export async function getPriceBenchmark(
     scope,
   };
 }
+
+/** Flat platform surcharge applied to the opening ask when a request is marked urgent. */
+export const URGENT_SURCHARGE_RATE = 0.25;
+
+export type Quote = {
+  units: number;
+  basePrice: number;
+  urgentSurchargePct: number;
+  surchargeAmount: number;
+  totalPrice: number;
+};
+
+/**
+ * Opening price for a request: the resource's normal rate times the booking length and
+ * quantity, plus a flat surcharge if the request is urgent. Advance bookings pay the
+ * normal rate; same-day/urgent ones pay more — the negotiation thread can still move
+ * the price from there.
+ */
+export function computeQuote(
+  resource: { pricePerUnit: number; unit: "HOUR" | "DAY" },
+  params: { startDate: Date; endDate: Date; quantityNeeded: number; urgent: boolean }
+): Quote {
+  const unitMs = resource.unit === "HOUR" ? 1000 * 60 * 60 : 1000 * 60 * 60 * 24;
+  const units = Math.max(1, Math.ceil((params.endDate.getTime() - params.startDate.getTime()) / unitMs));
+  const basePrice = resource.pricePerUnit * units * Math.max(1, params.quantityNeeded);
+  const urgentSurchargePct = params.urgent ? URGENT_SURCHARGE_RATE : 0;
+  const surchargeAmount = basePrice * urgentSurchargePct;
+  return { units, basePrice, urgentSurchargePct, surchargeAmount, totalPrice: basePrice + surchargeAmount };
+}

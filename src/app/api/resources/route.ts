@@ -23,6 +23,7 @@ const createSchema = z.object({
   unit: z.enum(["HOUR", "DAY"]).default("DAY"),
   pricePerUnit: z.number().positive(),
   minRentalPeriod: z.number().int().positive().default(1),
+  depositAmount: z.number().positive().optional(),
   amenities: z.array(z.string()).default([]),
   city: z.string().min(2),
   lat: z.number().optional(),

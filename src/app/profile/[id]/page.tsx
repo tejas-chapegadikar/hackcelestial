@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { computeTrustScore } from "@/lib/matching";
 import { BUSINESS_TYPE_LABELS, RESOURCE_TYPE_LABELS } from "@/lib/utils";
 import { StarRating } from "@/components/Badges";
+import { cardClasses } from "@/components/ui";
 
 export default async function PublicProfilePage({
   params,
@@ -35,7 +36,7 @@ export default async function PublicProfilePage({
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-semibold">{business.name}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{business.name}</h1>
         <p className="text-sm text-gray-600">
           {BUSINESS_TYPE_LABELS[business.businessType]} · {business.city}
         </p>
@@ -55,14 +56,14 @@ export default async function PublicProfilePage({
       </div>
 
       <div>
-        <h2 className="font-semibold text-sm mb-2">Listed resources</h2>
+        <h2 className="font-semibold text-gray-900 text-sm mb-2">Listed resources</h2>
         {resources.length === 0 ? (
           <p className="text-sm text-gray-500">No active listings.</p>
         ) : (
           <ul className="space-y-1">
             {resources.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/resources/${r.id}`} className="text-gray-900 hover:underline">
+                <Link href={`/resources/${r.id}`} className="text-gray-900 hover:text-teal-600 hover:underline">
                   {r.title}
                 </Link>{" "}
                 <span className="text-gray-500">({RESOURCE_TYPE_LABELS[r.type]})</span>
@@ -74,10 +75,10 @@ export default async function PublicProfilePage({
 
       {reviews.length > 0 && (
         <div>
-          <h2 className="font-semibold text-sm mb-2">Reviews</h2>
+          <h2 className="font-semibold text-gray-900 text-sm mb-2">Reviews</h2>
           <ul className="space-y-2">
             {reviews.map((r) => (
-              <li key={r.id} className="bg-white border border-gray-200 rounded-2xl p-3 text-sm">
+              <li key={r.id} className={`${cardClasses()} p-3 text-sm`}>
                 <div className="flex items-center gap-2">
                   <StarRating value={r.rating} />
                   <span className="text-xs text-gray-500">from {r.from.name}</span>

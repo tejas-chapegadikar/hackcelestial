@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { RESOURCE_TYPE_LABELS, formatDate, cn } from "@/lib/utils";
+import { RESOURCE_TYPE_LABELS, formatCurrency, formatDate, cn } from "@/lib/utils";
 import { RequestStatusBadge, UrgentBadge } from "@/components/Badges";
+import { cardClasses } from "@/components/ui";
 
 type RequestRow = {
   id: string;
@@ -13,6 +14,7 @@ type RequestRow = {
   startDate: string;
   endDate: string;
   createdAt: string;
+  totalPrice: number | null;
   resource: { id: string; title: string; type: string };
   seeker?: { id: string; name: string; city: string };
 };
@@ -37,13 +39,13 @@ function RequestsInner() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Requests</h1>
-        <div className="flex gap-1 bg-gray-100 rounded-md p-1">
+        <h1 className="text-2xl font-semibold text-gray-900">Requests</h1>
+        <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
           <button
             onClick={() => router.push("/requests?role=seeker")}
             className={cn(
-              "text-sm font-medium px-3 py-1.5 rounded-md",
-              role === "seeker" ? "bg-white shadow-sm" : "text-gray-600"
+              "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors",
+              role === "seeker" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
             )}
           >
             My requests
@@ -51,8 +53,8 @@ function RequestsInner() {
           <button
             onClick={() => router.push("/requests?role=provider")}
             className={cn(
-              "text-sm font-medium px-3 py-1.5 rounded-md",
-              role === "provider" ? "bg-white shadow-sm" : "text-gray-600"
+              "text-sm font-medium px-3 py-1.5 rounded-lg transition-colors",
+              role === "provider" ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"
             )}
           >
             Inbox
@@ -65,14 +67,10 @@ function RequestsInner() {
 
       <div className="space-y-2">
         {requests?.map((r) => (
-          <Link
-            key={r.id}
-            href={`/requests/${r.id}`}
-            className="block bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors"
-          >
+          <Link key={r.id} href={`/requests/${r.id}`} className={`block ${cardClasses(true)} p-4`}>
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
-                <div className="font-medium flex items-center gap-2">
+                <div className="font-medium text-gray-900 flex items-center gap-2">
                   {r.resource.title}
                   {r.urgent && <UrgentBadge />}
                 </div>
@@ -81,7 +79,12 @@ function RequestsInner() {
                   {role === "provider" && r.seeker && <> · from {r.seeker.name}</>}
                 </div>
               </div>
-              <RequestStatusBadge status={r.status} />
+              <div className="flex items-center gap-3">
+                {r.totalPrice != null && (
+                  <span className="text-sm font-semibold text-gray-900">{formatCurrency(r.totalPrice)}</span>
+                )}
+                <RequestStatusBadge status={r.status} />
+              </div>
             </div>
           </Link>
         ))}

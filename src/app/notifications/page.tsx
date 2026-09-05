@@ -43,8 +43,8 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-xl space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Notifications</h1>
-        <button onClick={markAllRead} className="text-sm text-gray-900 font-medium">
+        <h1 className="text-2xl font-semibold text-gray-900">Notifications</h1>
+        <button onClick={markAllRead} className="text-sm text-teal-600 font-medium hover:text-teal-700">
           Mark all read
         </button>
       </div>
@@ -57,13 +57,13 @@ export default function NotificationsPage() {
           const content = (
             <div
               className={cn(
-                "bg-white border rounded-lg p-3 text-sm",
-                n.read ? "border-gray-200" : "border-gray-400 bg-gray-50"
+                "bg-white border rounded-xl p-3 text-sm transition-colors",
+                n.read ? "border-gray-200/80" : "border-teal-200 bg-teal-50/40"
               )}
             >
               <div className="flex items-center justify-between gap-2">
-                <span>{n.message}</span>
-                {!n.read && <span className="w-2 h-2 rounded-full bg-gray-500 shrink-0" />}
+                <span className="text-gray-800">{n.message}</span>
+                {!n.read && <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0" />}
               </div>
               <div className="text-xs text-gray-400 mt-1">{formatDateTime(n.createdAt)}</div>
             </div>

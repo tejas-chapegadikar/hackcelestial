@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { RESOURCE_TYPE_LABELS, formatDate } from "@/lib/utils";
+import { Button, Card } from "@/components/ui";
 
 type BundleItem = {
   id: string;
@@ -93,20 +94,20 @@ export default function BundleDetailPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">{bundle.title}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">{bundle.title}</h1>
         <p className="text-sm text-gray-600">
           {bundle.city} · Event on {formatDate(bundle.eventDate)}
         </p>
       </div>
 
-      {message && <p className="text-sm text-gray-900">{message}</p>}
+      {message && <p className="text-sm text-teal-600 font-medium">{message}</p>}
 
       {matches && (matches.fullFulfillment.length > 0 || matches.partialFulfillment.length > 0) && (
-        <section className="bg-white border border-gray-200 rounded-2xl p-4">
-          <h2 className="font-semibold text-sm mb-2">Providers who can fulfill this bundle</h2>
+        <Card className="p-4">
+          <h2 className="font-semibold text-sm text-gray-900 mb-2">Providers who can fulfill this bundle</h2>
           {matches.fullFulfillment.length > 0 && (
             <div className="mb-3">
-              <div className="text-xs font-medium text-green-700 mb-1">Full bundle ({matches.totalItems} of {matches.totalItems} items)</div>
+              <div className="text-xs font-medium text-emerald-700 mb-1">Full bundle ({matches.totalItems} of {matches.totalItems} items)</div>
               <ul className="space-y-1">
                 {matches.fullFulfillment.map((p) => (
                   <li key={p.providerId} className="text-sm">{p.providerName}</li>
@@ -126,15 +127,15 @@ export default function BundleDetailPage() {
               </ul>
             </div>
           )}
-        </section>
+        </Card>
       )}
 
       <section className="space-y-4">
         {bundle.items.map((item) => {
           const itemMatch = matches?.itemMatches[item.id];
           return (
-            <div key={item.id} className="bg-white border border-gray-200 rounded-2xl p-4">
-              <h3 className="font-semibold text-sm mb-2">
+            <Card key={item.id} className="p-4">
+              <h3 className="font-semibold text-sm text-gray-900 mb-2">
                 {RESOURCE_TYPE_LABELS[item.type]} · Qty {item.quantityNeeded}
                 {item.capacityNeeded ? ` · Capacity ${item.capacityNeeded}` : ""}
               </h3>
@@ -147,7 +148,7 @@ export default function BundleDetailPage() {
                     return (
                       <li key={m.resourceId} className="flex items-center justify-between text-sm">
                         <div>
-                          <Link href={`/resources/${m.resourceId}`} className="text-gray-900 hover:underline font-medium">
+                          <Link href={`/resources/${m.resourceId}`} className="text-gray-900 hover:text-teal-600 hover:underline font-medium">
                             {m.title}
                           </Link>
                           <span className="text-gray-500"> by {m.providerName}</span>
@@ -155,31 +156,32 @@ export default function BundleDetailPage() {
                         {alreadyRequested ? (
                           <span className="text-xs text-gray-500">Requested</span>
                         ) : (
-                          <button
+                          <Button
+                            variant="secondary"
+                            size="sm"
                             disabled={sending === m.resourceId}
                             onClick={() => sendRequest(item.id, m.resourceId)}
-                            className="border border-gray-300 text-xs font-medium px-2 py-1 rounded-md hover:bg-gray-100 disabled:opacity-50"
                           >
                             {sending === m.resourceId ? "Sending..." : "Request"}
-                          </button>
+                          </Button>
                         )}
                       </li>
                     );
                   })}
                 </ul>
               )}
-            </div>
+            </Card>
           );
         })}
       </section>
 
       {bundle.requests.length > 0 && (
         <section>
-          <h2 className="font-semibold text-sm mb-2">Requests sent for this bundle</h2>
+          <h2 className="font-semibold text-sm text-gray-900 mb-2">Requests sent for this bundle</h2>
           <ul className="space-y-1">
             {bundle.requests.map((r) => (
               <li key={r.id} className="text-sm">
-                <Link href={`/requests/${r.id}`} className="text-gray-900 hover:underline">
+                <Link href={`/requests/${r.id}`} className="text-gray-900 hover:text-teal-600 hover:underline">
                   {r.resource.title}
                 </Link>{" "}
                 — {r.status}

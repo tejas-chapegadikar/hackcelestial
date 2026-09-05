@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Resource, UnavailableRange } from "@prisma/client";
 import { formatDate } from "@/lib/utils";
+import { Button, Input, Label, Select, Textarea } from "@/components/ui";
 
 type Props = {
   resource: Resource & { unavailableRanges: UnavailableRange[] };
@@ -18,6 +19,7 @@ export default function EditResourceForm({ resource }: Props) {
     capacity: resource.capacity != null ? String(resource.capacity) : "",
     pricePerUnit: String(resource.pricePerUnit),
     minRentalPeriod: String(resource.minRentalPeriod),
+    depositAmount: resource.depositAmount != null ? String(resource.depositAmount) : "",
     amenities: resource.amenities.join(", "),
     city: resource.city,
     status: resource.status,
@@ -45,6 +47,7 @@ export default function EditResourceForm({ resource }: Props) {
         capacity: form.capacity ? Number(form.capacity) : undefined,
         pricePerUnit: Number(form.pricePerUnit),
         minRentalPeriod: Number(form.minRentalPeriod),
+        depositAmount: form.depositAmount ? Number(form.depositAmount) : undefined,
         amenities: form.amenities.split(",").map((a) => a.trim()).filter(Boolean),
         city: form.city,
         status: form.status,
@@ -83,154 +86,113 @@ export default function EditResourceForm({ resource }: Props) {
   return (
     <div className="max-w-lg space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold mb-6">Edit listing</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Edit listing</h1>
         <form onSubmit={handleSave} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <input
-              value={form.title}
-              onChange={(e) => update("title", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-            />
+            <Label>Title</Label>
+            <Input value={form.title} onChange={(e) => update("title", e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => update("description", e.target.value)}
-              rows={3}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-            />
+            <Label>Description</Label>
+            <Textarea value={form.description} onChange={(e) => update("description", e.target.value)} rows={3} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-              <input
-                type="number"
-                min={1}
-                value={form.quantity}
-                onChange={(e) => update("quantity", e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-              />
+              <Label>Quantity</Label>
+              <Input type="number" min={1} value={form.quantity} onChange={(e) => update("quantity", e.target.value)} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Capacity</label>
-              <input
-                type="number"
-                min={1}
-                value={form.capacity}
-                onChange={(e) => update("capacity", e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-              />
+              <Label>Capacity</Label>
+              <Input type="number" min={1} value={form.capacity} onChange={(e) => update("capacity", e.target.value)} />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Price per {resource.unit.toLowerCase()} (₹)
-              </label>
-              <input
+              <Label>Price per {resource.unit.toLowerCase()} (₹)</Label>
+              <Input
                 type="number"
                 min={0}
                 value={form.pricePerUnit}
                 onChange={(e) => update("pricePerUnit", e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Min. rental period</label>
-              <input
+              <Label>Min. rental period</Label>
+              <Input
                 type="number"
                 min={1}
                 value={form.minRentalPeriod}
                 onChange={(e) => update("minRentalPeriod", e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
               />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-            <input
-              value={form.city}
-              onChange={(e) => update("city", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+            <Label>City</Label>
+            <Input value={form.city} onChange={(e) => update("city", e.target.value)} />
+          </div>
+          <div>
+            <Label>Refundable deposit</Label>
+            <Input
+              type="number"
+              min={0}
+              value={form.depositAmount}
+              onChange={(e) => update("depositAmount", e.target.value)}
+              placeholder="e.g. 5000"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Amenities</label>
-            <input
-              value={form.amenities}
-              onChange={(e) => update("amenities", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-            />
+            <Label>Amenities</Label>
+            <Input value={form.amenities} onChange={(e) => update("amenities", e.target.value)} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-            <select
-              value={form.status}
-              onChange={(e) => update("status", e.target.value as "ACTIVE" | "INACTIVE")}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-            >
+            <Label>Status</Label>
+            <Select value={form.status} onChange={(e) => update("status", e.target.value as "ACTIVE" | "INACTIVE")}>
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
-            </select>
+            </Select>
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-2">
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-gray-900 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-            >
+            <Button type="submit" disabled={saving}>
               {saving ? "Saving..." : "Save changes"}
-            </button>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="border border-red-300 text-red-700 rounded-md px-4 py-2 text-sm font-medium hover:bg-red-50"
-            >
+            </Button>
+            <Button type="button" variant="danger" onClick={handleDelete}>
               Delete
-            </button>
+            </Button>
           </div>
         </form>
       </div>
 
       <div>
-        <h2 className="font-semibold mb-3">Block dates</h2>
+        <h2 className="font-semibold text-gray-900 mb-3">Block dates</h2>
         <form onSubmit={handleBlockRange} className="flex flex-wrap items-end gap-2 mb-4">
           <div>
-            <label className="block text-xs text-gray-600 mb-1">From</label>
-            <input
+            <Label size="sm">From</Label>
+            <Input
               type="date"
               value={blockForm.startDate}
               onChange={(e) => setBlockForm((f) => ({ ...f, startDate: e.target.value }))}
-              className="border border-gray-300 rounded-md px-2 py-1.5 text-sm"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-600 mb-1">To</label>
-            <input
+            <Label size="sm">To</Label>
+            <Input
               type="date"
               value={blockForm.endDate}
               onChange={(e) => setBlockForm((f) => ({ ...f, endDate: e.target.value }))}
-              className="border border-gray-300 rounded-md px-2 py-1.5 text-sm"
             />
           </div>
           <div>
-            <label className="block text-xs text-gray-600 mb-1">Reason</label>
-            <input
+            <Label size="sm">Reason</Label>
+            <Input
               value={blockForm.reason}
               onChange={(e) => setBlockForm((f) => ({ ...f, reason: e.target.value }))}
               placeholder="Maintenance"
-              className="border border-gray-300 rounded-md px-2 py-1.5 text-sm"
             />
           </div>
-          <button
-            type="submit"
-            className="border border-gray-300 rounded-md px-3 py-1.5 text-sm font-medium hover:bg-gray-100"
-          >
+          <Button type="submit" variant="secondary" size="sm">
             Block
-          </button>
+          </Button>
         </form>
         <ul className="space-y-1">
           {ranges.map((r) => (

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Lightbulb } from "lucide-react";
 import { RESOURCE_TYPE_LABELS, formatCurrency } from "@/lib/utils";
+import { Button, Input, Label, Select, Textarea } from "@/components/ui";
 
 type Benchmark = { min: number; max: number; avg: number; sampleSize: number; scope: string };
 
@@ -17,6 +19,7 @@ export default function NewResourcePage() {
     unit: "DAY",
     pricePerUnit: "",
     minRentalPeriod: "1",
+    depositAmount: "",
     amenities: "",
     city: "",
   });
@@ -65,6 +68,7 @@ export default function NewResourcePage() {
         unit: form.unit,
         pricePerUnit: Number(form.pricePerUnit),
         minRentalPeriod: Number(form.minRentalPeriod),
+        depositAmount: form.depositAmount ? Number(form.depositAmount) : undefined,
         amenities: form.amenities
           .split(",")
           .map((a) => a.trim())
@@ -85,140 +89,115 @@ export default function NewResourcePage() {
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-2xl font-semibold mb-6">List a resource</h1>
+      <h1 className="text-2xl font-semibold text-gray-900 mb-6">List a resource</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
-          <select
-            value={form.type}
-            onChange={(e) => update("type", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-          >
+          <Label>Type</Label>
+          <Select value={form.type} onChange={(e) => update("type", e.target.value)}>
             {Object.entries(RESOURCE_TYPE_LABELS).map(([v, l]) => (
               <option key={v} value={v}>
                 {l}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-          <input
-            required
-            value={form.title}
-            onChange={(e) => update("title", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
+          <Label>Title</Label>
+          <Input required value={form.title} onChange={(e) => update("title", e.target.value)} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea
-            value={form.description}
-            onChange={(e) => update("description", e.target.value)}
-            rows={3}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
+          <Label>Description</Label>
+          <Textarea value={form.description} onChange={(e) => update("description", e.target.value)} rows={3} />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Quantity available</label>
-            <input
+            <Label>Quantity available</Label>
+            <Input
               type="number"
               min={1}
               required
               value={form.quantity}
               onChange={(e) => update("quantity", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Capacity (optional)
-            </label>
-            <input
+            <Label>Capacity (optional)</Label>
+            <Input
               type="number"
               min={1}
               value={form.capacity}
               onChange={(e) => update("capacity", e.target.value)}
               placeholder="e.g. seats, cars"
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Rental unit</label>
-            <select
-              value={form.unit}
-              onChange={(e) => update("unit", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
-            >
+            <Label>Rental unit</Label>
+            <Select value={form.unit} onChange={(e) => update("unit", e.target.value)}>
               <option value="DAY">Per day</option>
               <option value="HOUR">Per hour</option>
-            </select>
+            </Select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Minimum rental period
-            </label>
-            <input
+            <Label>Minimum rental period</Label>
+            <Input
               type="number"
               min={1}
               required
               value={form.minRentalPeriod}
               onChange={(e) => update("minRentalPeriod", e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
             />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
-          <input
-            required
-            value={form.city}
-            onChange={(e) => update("city", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-          />
+          <Label>City</Label>
+          <Input required value={form.city} onChange={(e) => update("city", e.target.value)} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Price per {form.unit.toLowerCase()} (₹)
-          </label>
-          <input
+          <Label>Price per {form.unit.toLowerCase()} (₹)</Label>
+          <Input
             type="number"
             min={0}
             required
             value={form.pricePerUnit}
             onChange={(e) => update("pricePerUnit", e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
           />
           {benchmark && (
-            <p className="text-xs text-gray-900 mt-1.5">
-              💡 Similar resources {benchmark.scope === "city" ? "in your area" : "on the platform"} are
+            <p className="flex items-start gap-1.5 text-xs text-gray-600 mt-1.5">
+              <Lightbulb className="w-3.5 h-3.5 text-teal-500 shrink-0 mt-0.5" strokeWidth={2} />
+              Similar resources {benchmark.scope === "city" ? "in your area" : "on the platform"} are
               priced between {formatCurrency(benchmark.min)} – {formatCurrency(benchmark.max)} (avg{" "}
               {formatCurrency(benchmark.avg)}, {benchmark.sampleSize} listing(s)).
             </p>
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Amenities (comma separated)
-          </label>
-          <input
+          <Label>Refundable deposit (optional)</Label>
+          <Input
+            type="number"
+            min={0}
+            value={form.depositAmount}
+            onChange={(e) => update("depositAmount", e.target.value)}
+            placeholder="e.g. 5000"
+          />
+          <p className="text-xs text-gray-500 mt-1.5">
+            Worth setting for returnable items like furniture, AV gear or vehicles — held by you and
+            returned to the seeker once the item comes back in good condition.
+          </p>
+        </div>
+        <div>
+          <Label>Amenities (comma separated)</Label>
+          <Input
             value={form.amenities}
             onChange={(e) => update("amenities", e.target.value)}
             placeholder="AC, Stage, Sound System"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
           />
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-gray-900 text-white rounded-full px-4 py-2 text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-        >
+        <Button type="submit" disabled={loading}>
           {loading ? "Publishing..." : "Publish listing"}
-        </button>
+        </Button>
       </form>
     </div>
   );

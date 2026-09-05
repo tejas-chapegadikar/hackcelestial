@@ -2,8 +2,10 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { RESOURCE_TYPE_LABELS, formatCurrency } from "@/lib/utils";
 import { CompatibilityBadge, MinRentalBadge, StarRating, TypeIcon } from "@/components/Badges";
+import { Button, Card, Input, Label, Select, cardClasses } from "@/components/ui";
 
 type SearchResult = {
   resource: {
@@ -74,106 +76,99 @@ export default function ResourcesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold">Browse resources</h1>
+      <h1 className="text-2xl font-semibold text-gray-900">Browse resources</h1>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          search();
-        }}
-        className="bg-white border border-gray-200 rounded-2xl p-4 grid sm:grid-cols-3 lg:grid-cols-4 gap-3"
+      <Card
+        className="p-4"
       >
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Type</label>
-          <select
-            value={filters.type}
-            onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm bg-white"
-          >
-            <option value="">Any</option>
-            {Object.entries(RESOURCE_TYPE_LABELS).map(([v, l]) => (
-              <option key={v} value={v}>
-                {l}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">City</label>
-          <input
-            value={filters.city}
-            onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
-            placeholder="e.g. Mumbai"
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">From</label>
-          <input
-            type="date"
-            value={filters.startDate}
-            onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">To</label>
-          <input
-            type="date"
-            value={filters.endDate}
-            onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Qty needed</label>
-          <input
-            type="number"
-            min={1}
-            value={filters.quantityNeeded}
-            onChange={(e) => setFilters((f) => ({ ...f, quantityNeeded: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Capacity needed</label>
-          <input
-            type="number"
-            min={1}
-            value={filters.capacityNeeded}
-            onChange={(e) => setFilters((f) => ({ ...f, capacityNeeded: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">Budget (per unit)</label>
-          <input
-            type="number"
-            min={0}
-            value={filters.budget}
-            onChange={(e) => setFilters((f) => ({ ...f, budget: e.target.value }))}
-            className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
-          />
-        </div>
-        <div className="flex items-end gap-2">
-          <label className="flex items-center gap-1.5 text-xs text-gray-600">
-            <input
-              type="checkbox"
-              checked={filters.enforceMinRental}
-              onChange={(e) => setFilters((f) => ({ ...f, enforceMinRental: e.target.checked }))}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            search();
+          }}
+          className="grid sm:grid-cols-3 lg:grid-cols-4 gap-3"
+        >
+          <div>
+            <Label size="sm">Type</Label>
+            <Select value={filters.type} onChange={(e) => setFilters((f) => ({ ...f, type: e.target.value }))}>
+              <option value="">Any</option>
+              {Object.entries(RESOURCE_TYPE_LABELS).map(([v, l]) => (
+                <option key={v} value={v}>
+                  {l}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div>
+            <Label size="sm">City</Label>
+            <Input
+              value={filters.city}
+              onChange={(e) => setFilters((f) => ({ ...f, city: e.target.value }))}
+              placeholder="e.g. Mumbai"
             />
-            Enforce min. rental
-          </label>
-        </div>
-        <div className="sm:col-span-3 lg:col-span-4">
-          <button
-            type="submit"
-            className="bg-gray-900 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-800"
-          >
-            Search
-          </button>
-        </div>
-      </form>
+          </div>
+          <div>
+            <Label size="sm">From</Label>
+            <Input
+              type="date"
+              value={filters.startDate}
+              onChange={(e) => setFilters((f) => ({ ...f, startDate: e.target.value }))}
+            />
+          </div>
+          <div>
+            <Label size="sm">To</Label>
+            <Input
+              type="date"
+              value={filters.endDate}
+              onChange={(e) => setFilters((f) => ({ ...f, endDate: e.target.value }))}
+            />
+          </div>
+          <div>
+            <Label size="sm">Qty needed</Label>
+            <Input
+              type="number"
+              min={1}
+              value={filters.quantityNeeded}
+              onChange={(e) => setFilters((f) => ({ ...f, quantityNeeded: e.target.value }))}
+            />
+          </div>
+          <div>
+            <Label size="sm">Capacity needed</Label>
+            <Input
+              type="number"
+              min={1}
+              value={filters.capacityNeeded}
+              onChange={(e) => setFilters((f) => ({ ...f, capacityNeeded: e.target.value }))}
+            />
+          </div>
+          <div>
+            <Label size="sm">Budget (per unit)</Label>
+            <Input
+              type="number"
+              min={0}
+              value={filters.budget}
+              onChange={(e) => setFilters((f) => ({ ...f, budget: e.target.value }))}
+            />
+          </div>
+          <div className="flex items-end gap-2">
+            <label className="flex items-center gap-1.5 text-xs text-gray-600">
+              <input
+                type="checkbox"
+                checked={filters.enforceMinRental}
+                onChange={(e) => setFilters((f) => ({ ...f, enforceMinRental: e.target.checked }))}
+                className="rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+              />
+              Enforce min. rental
+            </label>
+          </div>
+          <div className="sm:col-span-3 lg:col-span-4">
+            <Button type="submit">
+              <Search className="w-4 h-4" strokeWidth={2} />
+              Search
+            </Button>
+          </div>
+        </form>
+      </Card>
 
       {loading && <p className="text-sm text-gray-500">Searching...</p>}
 
@@ -183,16 +178,12 @@ export default function ResourcesPage() {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {results?.map((r) => (
-          <Link
-            key={r.resource.id}
-            href={`/resources/${r.resource.id}`}
-            className="bg-white border border-gray-200 rounded-2xl p-4 hover:border-gray-400 transition-colors flex flex-col gap-2"
-          >
+          <Link key={r.resource.id} href={`/resources/${r.resource.id}`} className={`${cardClasses(true)} p-4 flex flex-col gap-2`}>
             <div className="flex items-start justify-between gap-2">
               <div className="flex items-start gap-3 min-w-0">
                 <TypeIcon type={r.resource.type} />
                 <div className="min-w-0">
-                  <div className="font-medium truncate">{r.resource.title}</div>
+                  <div className="font-medium text-gray-900 truncate">{r.resource.title}</div>
                   <div className="text-xs text-gray-500">
                     {RESOURCE_TYPE_LABELS[r.resource.type]} · {r.resource.city}
                   </div>
